@@ -56,6 +56,10 @@
                                             style="font-family: var(--font-main);">
                                         <button class="ctrl-btn" onclick="adjustValue('race-count', 1)">+</button>
                                     </div>
+                                    <div id="fairness-recommendation" class="recommendation-text"
+                                        style="display: none;">
+                                        <!-- Populated by JS -->
+                                    </div>
                                     <button class="btn-primary"
                                         onclick="startGrandPrix(parseInt(document.getElementById('controller-count').value), document.getElementById('race-count').value)">Start
                                         Grand Prix</button>

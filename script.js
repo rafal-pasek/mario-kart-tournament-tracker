@@ -109,6 +109,7 @@ function checkPlayerCount() {
         if (parseInt(controllerCountInput.value) > players.length) {
             controllerCountInput.value = players.length;
         }
+        updateFairnessRecommendation();
     } else {
         gpSetup.style.display = 'none';
     }
@@ -147,21 +148,35 @@ function endGrandPrix() {
     grandPrix.active = false;
     grandPrix.currentRacers = [];
     saveData();
+    renderLeaderboard(); // Ensure final standings are shown
 
     document.getElementById('gp-active').style.display = 'none';
     const summarySection = document.getElementById('tournament-complete');
     summarySection.style.display = 'block';
 
     // Populate summary with winner
-    const winner = [...players].sort((a, b) => b.points - a.points)[0];
-    if (winner) {
+    // Populate summary with winner(s)
+    console.log("Ending Grand Prix. Players:", JSON.parse(JSON.stringify(players)));
+
+    const sorted = [...players].sort((a, b) => b.points - a.points);
+    const maxPoints = sorted[0]?.points || 0;
+    const winners = sorted.filter(p => p.points === maxPoints);
+
+    console.log("Max Points:", maxPoints);
+    console.log("Winners:", winners);
+
+    if (winners.length > 0) {
         const h2 = summarySection.querySelector('h2');
+        const winnerNames = winners.map(w => w.name).join(' & ');
+        const titleText = winners.length > 1 ? "It's a Tie!" : "Tournament Complete!";
+        const winText = winners.length > 1 ? "Win!" : "Wins!";
+
         h2.innerHTML = `
             <div style="margin-bottom: 1rem;">
                 <img src="assets/trophy.png" alt="Winner Trophy" class="winner-trophy">
             </div>
-            Tournament Complete!<br>
-            <span style="font-size: 2rem; color: var(--primary-color); text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">${winner.name} Wins!</span>
+            ${titleText}<br>
+            <span style="font-size: 2rem; color: var(--primary-color); text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">${winnerNames} ${winText}</span>
         `;
     }
 }
@@ -218,6 +233,10 @@ window.adjustValue = function (elementId, delta) {
     if (val < min) val = min;
 
     input.value = val;
+
+    if (elementId === 'controller-count') {
+        updateFairnessRecommendation();
+    }
 }
 
 // Event Listeners for new buttons
@@ -428,6 +447,53 @@ function updateRaceActions() {
     }
 }
 
+function calculateFairRaceCounts(playerCount, controllerCount) {
+    if (playerCount < 2 || controllerCount < 1) return [];
+
+    const fairCounts = [];
+    // Check all race counts from 1 to 12
+    for (let r = 1; r <= 12; r++) {
+        // Total slots = races * controllers
+        // If total slots is divisible by player count, everyone plays equal times
+        if ((r * controllerCount) % playerCount === 0) {
+            fairCounts.push(r);
+        }
+    }
+
+    return fairCounts;
+}
+
+function updateFairnessRecommendation() {
+    const recDiv = document.getElementById('fairness-recommendation');
+    const pCount = players.length;
+    const cCount = parseInt(document.getElementById('controller-count').value) || 4;
+
+    if (pCount < 2) {
+        recDiv.style.display = 'none';
+        return;
+    }
+
+    const fairCounts = calculateFairRaceCounts(pCount, cCount);
+
+    if (fairCounts.length > 0) {
+        recDiv.style.display = 'block';
+        recDiv.innerHTML = `
+            <span style="color: var(--text-secondary); font-size: 0.8rem;">Fair: </span>
+            ${fairCounts.map(c => `<span class="fair-badge" onclick="setRaceCount(${c})">${c}</span>`).join('')}
+        `;
+    } else {
+        recDiv.style.display = 'none';
+    }
+}
+
+// Helper to set race count from badge
+window.setRaceCount = function (count) {
+    const input = document.getElementById('race-count');
+    if (input) {
+        input.value = count;
+    }
+}
+
 function getOrdinal(n) {
     const s = ["th", "st", "nd", "rd"];
     const v = n % 100;
@@ -459,6 +525,9 @@ function submitRaceResults() {
             raceNumber: grandPrix.raceNumber,
             results: [...grandPrix.results]
         });
+
+        // Update leaderboard immediately with new points
+        renderLeaderboard();
 
         // Check if tournament should end (only if not infinite)
         if (grandPrix.maxRaces !== Infinity && grandPrix.raceNumber >= grandPrix.maxRaces) {
@@ -496,13 +565,19 @@ function renderLeaderboard() {
     // Sort players by points (descending)
     const sortedPlayers = [...players].sort((a, b) => b.points - a.points);
 
+    let currentRank = 1;
     sortedPlayers.forEach((player, index) => {
-        const rank = index + 1;
-        const rankDisplay = `#${rank}`;
+        // Check for tie with previous player
+        if (index > 0 && player.points < sortedPlayers[index - 1].points) {
+            currentRank = index + 1;
+        }
+        // If points are equal, currentRank stays the same (tie)
+
+        const rankDisplay = `#${currentRank}`;
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="rank-cell">
-                <div class="rank-indicator rank-${rank}">${rankDisplay}</div>
+                <div class="rank-indicator rank-${currentRank}">${rankDisplay}</div>
             </td>
             <td class="player-cell">
                 <span class="player-name">${player.name}</span>

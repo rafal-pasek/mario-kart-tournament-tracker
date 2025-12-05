@@ -243,6 +243,30 @@ select:focus {
     box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
 }
 
+.recommendation-text {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.fair-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    margin: 0 0.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.fair-badge:hover {
+    background: var(--primary-color);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
 /* Buttons */
 button {
     cursor: pointer;
@@ -588,21 +612,21 @@ tr:last-child td {
 }
 
 /* Gold */
-tr:nth-child(1) .rank-cell {
+.rank-indicator.rank-1 {
     color: #fbbf24;
     font-size: 1.5rem;
     text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
 }
 
 /* Silver */
-tr:nth-child(2) .rank-cell {
+.rank-indicator.rank-2 {
     color: #e2e8f0;
     font-size: 1.3rem;
     text-shadow: 0 0 8px rgba(226, 232, 240, 0.4);
 }
 
 /* Bronze */
-tr:nth-child(3) .rank-cell {
+.rank-indicator.rank-3 {
     color: #fdba74;
     font-size: 1.2rem;
     text-shadow: 0 0 6px rgba(253, 186, 116, 0.3);
