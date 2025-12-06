@@ -276,7 +276,7 @@ function generateNextRace() {
     renderGpState();
 }
 
-function renderGpState() {
+function renderGpState(shouldAnimate = true) {
     raceNumberDisplay.textContent = grandPrix.raceNumber;
 
     // Render Active Racers
@@ -315,16 +315,16 @@ function renderGpState() {
 
             if (result) {
                 chip.classList.add('ranked');
-                // Only animate if it's the most recent one (highest rank number currently assigned)
+                // Only animate if it's the most recent one (highest rank number currently assigned) AND animation is allowed
                 const isNewest = result.rank === grandPrix.results.length;
-                const animateClass = isNewest ? 'animate' : '';
+                const animateClass = (isNewest && shouldAnimate) ? 'animate' : '';
                 chip.innerHTML = `
                     <span>${player.name}</span>
                     <div class="rank-badge rank-${result.rank} ${animateClass}">${getOrdinal(result.rank)}</div>
                 `;
-                // Allow deselecting? For now, maybe just block interaction or allow reset
+                // Allow deselecting
                 chip.onclick = () => {
-                    // Optional: Undo logic could go here
+                    deselectRacer(player.id);
                 };
             } else {
                 chip.textContent = player.name;
@@ -411,6 +411,18 @@ function selectRacerRank(playerId) {
     const rank = grandPrix.results.length + 1;
     grandPrix.results.push({ playerId, rank });
     renderGpState();
+}
+
+function deselectRacer(playerId) {
+    // Remove player from results
+    grandPrix.results = grandPrix.results.filter(r => r.playerId !== playerId);
+
+    // Re-assign ranks based on new order (preserve order of remaining)
+    grandPrix.results.forEach((r, index) => {
+        r.rank = index + 1;
+    });
+
+    renderGpState(false);
 }
 
 function updateRaceActions() {

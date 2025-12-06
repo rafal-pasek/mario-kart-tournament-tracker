@@ -764,6 +764,7 @@ tr:last-child td {
         /* Enable page scrolling */
         height: auto;
         min-height: 100vh;
+        background-image: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.85)), url('assets/mobile_background.jpg');
     }
 
     .app-container {
