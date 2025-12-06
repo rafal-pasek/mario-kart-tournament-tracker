@@ -244,7 +244,11 @@ select:focus {
 }
 
 .recommendation-text {
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
     margin-top: 0.5rem;
     font-size: 0.8rem;
 }
@@ -255,7 +259,8 @@ select:focus {
     color: var(--text-primary);
     padding: 0.1rem 0.4rem;
     border-radius: 4px;
-    margin: 0 0.2rem;
+    margin: 0;
+    /* Use gap from container */
     cursor: pointer;
     transition: all 0.2s ease;
     border: 1px solid transparent;
