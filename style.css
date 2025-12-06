@@ -763,6 +763,8 @@ tr:last-child td {
         overflow: hidden;
         /* Disable page scrolling, use container */
         height: 100vh;
+        height: 100dvh;
+        /* Use dynamic viewport height for mobile browsers */
         background-image: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.85)), url('assets/mobile_background.jpg');
         background-size: cover;
         background-position: center;
@@ -770,7 +772,12 @@ tr:last-child td {
 
     .app-container {
         height: 100vh;
+        height: 100dvh;
         padding-bottom: 0;
+        /* Handle Notch */
+        padding-top: env(safe-area-inset-top);
+        /* Handle Home Indicator / Bottom Bar */
+        padding-bottom: env(safe-area-inset-bottom);
         overflow: hidden;
     }
 
@@ -787,6 +794,8 @@ tr:last-child td {
         display: block;
         /* Allow normal block flow for scrolling */
         padding: 1rem;
+        /* Ensure content isn't hidden behind bottom bars if they overlay */
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
     }
 
     .unified-grid {
