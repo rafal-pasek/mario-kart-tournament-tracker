@@ -760,27 +760,42 @@ tr:last-child td {
 /* Responsive Design */
 @media (max-width: 768px) {
     body {
-        overflow-y: auto;
-        /* Enable page scrolling */
-        height: auto;
-        min-height: 100vh;
+        overflow: hidden;
+        /* Disable page scrolling, use container */
+        height: 100vh;
         background-image: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.85)), url('assets/mobile_background.jpg');
+        background-size: cover;
+        background-position: center;
     }
 
     .app-container {
-        height: auto;
-        /* Allow container to grow */
-        padding-bottom: 2rem;
+        height: 100vh;
+        padding-bottom: 0;
+        overflow: hidden;
+    }
+
+    .main-container {
+        overflow: hidden;
+        /* Ensure main container doesn't scroll, child does */
+        padding-bottom: 1rem;
+    }
+
+    .unified-card {
+        overflow-y: auto;
+        /* Scrollable content area */
+        height: 100%;
+        display: block;
+        /* Allow normal block flow for scrolling */
+        padding: 1rem;
     }
 
     .unified-grid {
-        grid-template-columns: 1fr;
-        /* Stack columns */
-        grid-template-rows: auto;
-        gap: 2rem;
-        overflow: visible;
         display: flex;
         flex-direction: column;
+        gap: 2rem;
+        height: auto;
+        /* Let it grow */
+        overflow: visible;
     }
 
     .column-left,
@@ -789,17 +804,12 @@ tr:last-child td {
         height: auto;
     }
 
-    .unified-card {
-        overflow: visible;
-        height: auto;
-        flex: none;
-    }
-
     .scrollable-content,
     .table-container {
         overflow: visible;
         flex: none;
-        /* Allow content to expand */
+        max-height: none;
+        /* Remove internal constraints */
     }
 
     /* Adjust font sizes for mobile */
@@ -813,5 +823,14 @@ tr:last-child td {
 
     .race-badge {
         font-size: 0.8rem;
+    }
+
+    /* Header stays natural at top of flex column, no sticky needed */
+    header {
+        position: static;
+        background: transparent;
+        backdrop-filter: none;
+        border-bottom: none;
+        margin-bottom: 0.5rem;
     }
 }
