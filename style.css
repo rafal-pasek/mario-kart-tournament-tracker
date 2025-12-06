@@ -756,3 +756,61 @@ tr:last-child td {
     text-align: center;
     padding-right: 0.5rem;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        /* Enable page scrolling */
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .app-container {
+        height: auto;
+        /* Allow container to grow */
+        padding-bottom: 2rem;
+    }
+
+    .unified-grid {
+        grid-template-columns: 1fr;
+        /* Stack columns */
+        grid-template-rows: auto;
+        gap: 2rem;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .column-left,
+    .column-right {
+        overflow: visible;
+        height: auto;
+    }
+
+    .unified-card {
+        overflow: visible;
+        height: auto;
+        flex: none;
+    }
+
+    .scrollable-content,
+    .table-container {
+        overflow: visible;
+        flex: none;
+        /* Allow content to expand */
+    }
+
+    /* Adjust font sizes for mobile */
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    .race-badge {
+        font-size: 0.8rem;
+    }
+}

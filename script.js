@@ -569,7 +569,7 @@ function renderLeaderboard() {
     sortedPlayers.forEach((player, index) => {
         // Check for tie with previous player
         if (index > 0 && player.points < sortedPlayers[index - 1].points) {
-            currentRank = index + 1;
+            currentRank++;
         }
         // If points are equal, currentRank stays the same (tie)
 
